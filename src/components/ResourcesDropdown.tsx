@@ -4,9 +4,9 @@ import Button from "@clayui/button";
 
 import "@clayui/css/lib/css/atlas.css";
 import { useState } from "react";
-import type { ApiResourceItem } from "../utils/utils";
 import ResourceItem from "./ResourceItem";
 import Form, { ClayInput } from "@clayui/form";
+import { useRequestContext } from "../hooks/useRequestContext";
 
 type Resource = {
   id: number;
@@ -32,78 +32,16 @@ const items: ResourceGroup[] = [
   },
 ];
 
-export default function ResourcesDropdown() {
-  const [data, setData] = useState<ApiResourceItem[] | null>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+const ResourcesManager = () => {
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [value, setValue] = useState("");
 
-  const fetchData = async (resourceName: string) => {
-    setLoading(true);
-    try {
-      const data = await fetch(
-        `https://jsonplaceholder.typicode.com/${resourceName}`
-      ).then((response) => response.json());
+  const { loading, data, setData, sendRequest } = useRequestContext();
 
-      if (data) {
-        setData(data);
-      }
-    } catch (error) {
-      setError(`ERROR FETCHING DATA: ${error}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const postData = async (
-    body: object,
-    resourceName: string,
-    title: string
-  ) => {
-    setLoading(true);
-
-    try {
-      const post = await fetch(
-        `https://jsonplaceholder.typicode.com/${resourceName}`,
-        {
-          body: JSON.stringify({ title, ...body }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-          method: "POST",
-        }
-      );
-
-      // The push method returns the new length of the array, not the array itself.
-      // We need to update the state with a new array that includes the new post.
-
-      if (data) {
-        const newPost = await post.json();
-
-        setData([newPost as ApiResourceItem, ...data]);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onDeleteItem = (idToDelete: number) => {
-    setData((prevData) => {
-      if (!prevData) {
-        return null;
-      }
-
-      return prevData.filter((item) => item.id !== idToDelete);
-    });
-  };
-
-  const hasResources = !loading && !error && data && data?.length > 0;
+  const hasResources = !loading && data && data?.length > 0;
 
   return (
-    <Provider spritemap="/icons.svg">
+    <>
       <div className="container-fluid">
         <div className="d-flex justify-content-center align-items-center p-4">
           <DropDown
@@ -127,7 +65,10 @@ export default function ResourcesDropdown() {
                       onClick={() => {
                         setSelectedItem(selectedResource);
 
-                        fetchData(selectedResource);
+                        sendRequest({
+                          method: "GET",
+                          resourceName: selectedResource,
+                        });
                       }}
                     >
                       {selectedResource.toUpperCase()}
@@ -163,14 +104,14 @@ export default function ResourcesDropdown() {
                 className="ml-2 px-3"
                 displayType="secondary"
                 onClick={() => {
-                  postData(
-                    {
+                  sendRequest({
+                    method: "POST",
+                    resourceName: "todos",
+                    body: {
+                      title: value,
                       completed: false,
-                      userId: 1,
                     },
-                    "todos",
-                    value
-                  );
+                  });
 
                   setValue("");
                 }}
@@ -185,17 +126,23 @@ export default function ResourcesDropdown() {
 
       {loading && <p className="text-center">Loading {selectedItem}</p>}
 
-      {error && !loading && <p className="text-center text-danger">{error}</p>}
-
       {hasResources && (
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
           {data.map((items) => (
             <div key={items.id} className="col">
-              <ResourceItem data={items} onDelete={onDeleteItem} />
+              <ResourceItem data={items} />
             </div>
           ))}
         </div>
       )}
+    </>
+  );
+};
+
+export default function ResourcesDropdown() {
+  return (
+    <Provider spritemap="/icons.svg">
+      <ResourcesManager />
     </Provider>
   );
 }

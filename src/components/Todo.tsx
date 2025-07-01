@@ -1,33 +1,17 @@
 import Button from "@clayui/button";
 import Card from "@clayui/card";
 import React, { useState } from "react";
+import { useRequestContext } from "../hooks/useRequestContext";
 
 interface ITodoProps {
   completed: boolean;
   id: number;
-  onDelete: (id: number) => void;
   title: string;
 }
 
-const Todo: React.FC<ITodoProps> = ({ completed, id, title, onDelete }) => {
-  const handleDelete = async () => {
-    try {
-      const response = await fetch(
-        `https://jsonplaceholder.typicode.com/todos/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (response.ok) {
-        onDelete(id);
-      }
-    } catch (error) {
-      console.error(`Failed to delete todo: ${error}`);
-    }
-  };
-
+const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
   const [isCompleted, setIsCompleted] = useState<boolean>(completed);
+  const { sendRequest } = useRequestContext();
 
   const styles: object = isCompleted
     ? { color: "grey", textDecoration: "line-through" }
@@ -60,7 +44,16 @@ const Todo: React.FC<ITodoProps> = ({ completed, id, title, onDelete }) => {
           </Button>
         )}
 
-        <Button displayType="secondary" onClick={handleDelete}>
+        <Button
+          displayType="secondary"
+          onClick={() =>
+            sendRequest({
+              method: "DELETE",
+              resourceName: "todos",
+              id,
+            })
+          }
+        >
           {"Delete todo"}
         </Button>
       </Card.Body>
