@@ -5,8 +5,10 @@ import Button from "@clayui/button";
 import "@clayui/css/lib/css/atlas.css";
 import { useState } from "react";
 import ResourceItem from "./ResourceItem";
-import Form, { ClayInput } from "@clayui/form";
 import { useRequestContext } from "../hooks/useRequestContext";
+import { HTTPMethods } from "../hooks/useRequest";
+import AddTodoInput from "./todos/AddTodoInput";
+import LoadingIndicator from "@clayui/loading-indicator";
 
 type Resource = {
   id: number;
@@ -66,7 +68,7 @@ const ResourcesManager = () => {
                         setSelectedItem(selectedResource);
 
                         sendRequest({
-                          method: "GET",
+                          method: HTTPMethods.GET,
                           resourceName: selectedResource,
                         });
                       }}
@@ -87,44 +89,16 @@ const ResourcesManager = () => {
             }}
             displayType="secondary"
           >
-            Clear Data
+            {"Clear Data"}
           </Button>
 
           {selectedItem === "todos" && (
-            <Form.Group className="d-flex justify-content-center align-items-center mb-0 p-4">
-              <ClayInput
-                id="basicInputText"
-                placeholder="Add new todo here.."
-                type="text"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
-
-              <Button
-                className="ml-2 px-3"
-                displayType="secondary"
-                onClick={() => {
-                  sendRequest({
-                    method: "POST",
-                    resourceName: "todos",
-                    body: {
-                      title: value,
-                      completed: false,
-                    },
-                  });
-
-                  setValue("");
-                }}
-                type="submit"
-              >
-                {"Add todo"}
-              </Button>
-            </Form.Group>
+            <AddTodoInput value={value} setValue={setValue} />
           )}
         </div>
       </div>
 
-      {loading && <p className="text-center">Loading {selectedItem}</p>}
+      {loading && <LoadingIndicator displayType="secondary" size="md" />}
 
       {hasResources && (
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
