@@ -1,15 +1,15 @@
 import { useState } from "react";
 import type { ApiResourceItem } from "../utils/utils";
 
-enum HTTPMethods {
+export enum HTTPMethods {
   GET = "GET",
   POST = "POST",
   DELETE = "DELETE",
-  PUT = "PUT",
+  PATCH = "PATCH",
 }
 
 type SendRequestOptions = {
-  method: "GET" | "POST" | "DELETE" | "PUT";
+  method: "GET" | "POST" | "DELETE" | "PATCH";
   resourceName: string;
   body?: object;
   id?: number;
@@ -18,7 +18,9 @@ type SendRequestOptions = {
 export const useRequest = () => {
   const [data, setData] = useState<ApiResourceItem[] | null>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [tempIdCounter, setTempIdCounter] = useState<number>(0);
+
+  // Starting at 1 to avoid generating an ID of 0, which can be a real server ID.
+  const [tempIdCounter, setTempIdCounter] = useState<number>(1);
 
   const endpoint: string = "https://jsonplaceholder.typicode.com/";
 
@@ -67,11 +69,10 @@ export const useRequest = () => {
 
           // The JSON Placeholder API returns an ID with the same value (201) for every POST made
           // So, it was necessary to create an unique client-side ID to manage UI state correctly
-          // Using a negative, incrementing counter avoids clashes with real IDs from GET
-
+          // Using a negative counter avoids clashes with real IDs from GET
           const uniqueClientPost = {
             ...newPost,
-            id: -tempIdCounter + 1,
+            id: -tempIdCounter,
           };
 
           setTempIdCounter((prevCounter) => prevCounter + 1);
@@ -89,15 +90,23 @@ export const useRequest = () => {
         }
       }
 
-      if (method === HTTPMethods.PUT) {
-        const data = await fetch(`${endpoint}${resourceName}/${id}`, {
-          body: JSON.stringify({ ...body }),
+      if (method === HTTPMethods.PATCH) {
+        const updatedItem = await fetch(`${endpoint}${resourceName}/${id}`, {
+          body: JSON.stringify(body),
           headers,
-          method: HTTPMethods.PUT,
+          method: HTTPMethods.PATCH,
         }).then((response) => response.json());
 
-        if (data) {
-          setData(data);
+        if (updatedItem) {
+          setData((prevData) => {
+            if (!prevData) {
+              return null;
+            }
+
+            return prevData.map((item) =>
+              item.id === id ? { ...item, ...updatedItem } : item
+            );
+          });
         }
       }
     } catch (error) {
