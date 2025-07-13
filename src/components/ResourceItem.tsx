@@ -8,7 +8,7 @@ import {
   isUser,
   type ApiResourceItem,
 } from "../utils/utils";
-import Todo from "./Todo";
+import Todo from "./todos/Todo";
 
 interface ResourceProps {
   data: ApiResourceItem;
