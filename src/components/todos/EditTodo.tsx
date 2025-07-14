@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Alert from "@clayui/alert";
 import Form, { ClayInput } from "@clayui/form";
 import { HTTPMethods } from "../../hooks/useRequest";
-import { useRequestContext } from "../../hooks/useRequestContext";
 import Button from "@clayui/button";
+import { useResourcesActionsContext } from "../../hooks/useResourcesActionsContext";
 
 interface IEditTodoProps {
   completed: boolean;
@@ -20,7 +20,7 @@ const EditTodo: React.FC<IEditTodoProps> = ({
 }) => {
   const [alert, setAlert] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
-  const { sendRequest } = useRequestContext();
+  const { handleTodoActions } = useResourcesActionsContext();
 
   const isMounted = useRef(true);
 
@@ -31,28 +31,6 @@ const EditTodo: React.FC<IEditTodoProps> = ({
       isMounted.current = false;
     };
   }, []);
-
-  const handleEditTodo = async () => {
-    if (!value) {
-      setAlert(true);
-
-      return;
-    }
-
-    await sendRequest({
-      body: {
-        completed,
-        title: value,
-      },
-      id,
-      method: HTTPMethods.PATCH,
-      resourceName: "todos",
-    });
-
-    if (isMounted.current) {
-      setIsEditActive(false);
-    }
-  };
 
   return (
     <>
@@ -68,14 +46,37 @@ const EditTodo: React.FC<IEditTodoProps> = ({
 
           <Form.Group className="d-flex justify-content-center align-items-center mb-0 p-2">
             <ClayInput
-              id="basicInputText"
+              id={`edit-todo-input-${id}`}
               placeholder="New title here"
               type="text"
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />
 
-            <Button className="m-1" onClick={handleEditTodo} type="submit">
+            <Button
+              className="m-1"
+              onClick={async () => {
+                if (!value) {
+                  setAlert(true);
+
+                  return;
+                }
+
+                await handleTodoActions({
+                  id,
+                  method: HTTPMethods.PATCH,
+                  body: {
+                    completed,
+                    title: value,
+                  },
+                });
+
+                if (isMounted.current) {
+                  setIsEditActive(false);
+                }
+              }}
+              type="submit"
+            >
               {"Finish"}
             </Button>
           </Form.Group>

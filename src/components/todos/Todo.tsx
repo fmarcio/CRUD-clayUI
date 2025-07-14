@@ -1,10 +1,9 @@
 import Card from "@clayui/card";
 import React, { useState } from "react";
-import { useRequestContext } from "../../hooks/useRequestContext";
 import { HTTPMethods } from "../../hooks/useRequest";
 import EditTodo from "./EditTodo";
 import Button from "@clayui/button";
-
+import { useResourcesActionsContext } from "../../hooks/useResourcesActionsContext";
 interface ITodoProps {
   completed: boolean;
   id: number;
@@ -13,27 +12,7 @@ interface ITodoProps {
 
 const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
-  const { sendRequest } = useRequestContext();
-
-  const handleToggleComplete = async () => {
-    await sendRequest({
-      body: {
-        completed: !completed,
-        title,
-      },
-      id,
-      method: HTTPMethods.PATCH,
-      resourceName: "todos",
-    });
-  };
-
-  const handleDelete = async () => {
-    await sendRequest({
-      id,
-      method: HTTPMethods.DELETE,
-      resourceName: "todos",
-    });
-  };
+  const { handleTodoActions } = useResourcesActionsContext();
 
   const styles: object = completed
     ? { color: "grey", textDecoration: "line-through" }
@@ -47,7 +26,19 @@ const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
         </Card.Description>
 
         {!isEditActive && (
-          <Button className="m-2" onClick={handleToggleComplete}>
+          <Button
+            className="m-2"
+            onClick={() =>
+              handleTodoActions({
+                id,
+                method: HTTPMethods.PATCH,
+                body: {
+                  completed: !completed,
+                  title,
+                },
+              })
+            }
+          >
             {completed ? "Set back to incomplete" : "Complete todo"}
           </Button>
         )}
@@ -60,8 +51,14 @@ const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
         />
 
         {!isEditActive && (
-          <Button className="m-2" displayType="danger" onClick={handleDelete}>
-            {"Delete todo "}
+          <Button
+            className="m-2"
+            displayType="danger"
+            onClick={() =>
+              handleTodoActions({ id, method: HTTPMethods.DELETE })
+            }
+          >
+            {"Delete todo"}
           </Button>
         )}
       </Card.Body>

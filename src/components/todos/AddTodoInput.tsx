@@ -3,18 +3,18 @@ import Form, { ClayInput } from "@clayui/form";
 import { HTTPMethods } from "../../hooks/useRequest";
 import { useRequestContext } from "../../hooks/useRequestContext";
 
-interface IAddTodoProps {
+interface IAddTodoInput {
   setValue: (val: string) => void;
   value: string;
 }
 
-const AddTodoInput = ({ setValue, value }: IAddTodoProps) => {
+const AddTodoInput: React.FC<IAddTodoInput> = ({ setValue, value }) => {
   const { sendRequest } = useRequestContext();
 
   return (
     <Form.Group className="d-flex justify-content-center align-items-center mb-0 p-4">
       <ClayInput
-        id="basicInputText"
+        id="add-todo-input"
         placeholder="Add new todo here.."
         type="text"
         value={value}
