@@ -15,6 +15,7 @@
     "@clayui/card": "^3.139.1",
     "@clayui/css": "^3.138.0",
     "@clayui/drop-down": "^3.138.0",
+    "@clayui/empty-state": "^3.128.0",
     "@clayui/form": "^3.140.0",
     "@clayui/icon": "^3.128.0",
     "@clayui/loading-indicator": "^3.128.0",
