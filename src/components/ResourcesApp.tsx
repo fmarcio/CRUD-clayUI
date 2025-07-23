@@ -27,7 +27,7 @@ const ResourcesManager: React.FC = () => {
         </div>
       )}
 
-      {!hasResources && (
+      {!hasResources && !loading && (
         <div className="p-4">
           <EmptyState
             description="Please select a resource to view it's data"
