@@ -19,8 +19,10 @@
     "@clayui/form": "^3.140.0",
     "@clayui/icon": "^3.128.0",
     "@clayui/loading-indicator": "^3.128.0",
+    "@tailwindcss/vite": "^4.1.11",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react-dom": "^16.14.0",
+    "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
