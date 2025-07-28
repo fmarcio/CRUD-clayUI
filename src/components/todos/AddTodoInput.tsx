@@ -3,12 +3,12 @@ import Form, { ClayInput } from "@clayui/form";
 import { HTTPMethods } from "../../hooks/useRequest";
 import { useRequestContext } from "../../hooks/useRequestContext";
 
-interface IAddTodoInput {
+interface IAddTodoInputProps {
   setValue: (val: string) => void;
   value: string;
 }
 
-const AddTodoInput: React.FC<IAddTodoInput> = ({ setValue, value }) => {
+const AddTodoInput: React.FC<IAddTodoInputProps> = ({ setValue, value }) => {
   const { sendRequest } = useRequestContext();
 
   return (
