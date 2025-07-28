@@ -3,7 +3,7 @@ import Alert from "@clayui/alert";
 import Form, { ClayInput } from "@clayui/form";
 import { HTTPMethods } from "../../hooks/useRequest";
 import Button from "@clayui/button";
-import { useResourcesActionsContext } from "../../hooks/useResourcesActionsContext";
+import { useRequestContext } from "../../hooks/useRequestContext";
 
 interface IEditTodoProps {
   completed: boolean;
@@ -20,7 +20,7 @@ const EditTodo: React.FC<IEditTodoProps> = ({
 }) => {
   const [alert, setAlert] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
-  const { handleTodoActions } = useResourcesActionsContext();
+  const { sendRequest } = useRequestContext();
 
   const isMounted = useRef(true);
 
@@ -62,13 +62,14 @@ const EditTodo: React.FC<IEditTodoProps> = ({
                   return;
                 }
 
-                await handleTodoActions({
-                  id,
-                  method: HTTPMethods.PATCH,
+                await sendRequest({
                   body: {
                     completed,
                     title: value,
                   },
+                  id,
+                  method: HTTPMethods.PATCH,
+                  resourceName: "todos",
                 });
 
                 if (isMounted.current) {

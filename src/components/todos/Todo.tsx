@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { HTTPMethods } from "../../hooks/useRequest";
 import EditTodo from "./EditTodo";
 import Button from "@clayui/button";
-import { useResourcesActionsContext } from "../../hooks/useResourcesActionsContext";
+import { useRequestContext } from "../../hooks/useRequestContext";
 interface ITodoProps {
   completed: boolean;
   id: number;
@@ -12,7 +12,7 @@ interface ITodoProps {
 
 const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
-  const { handleTodoActions } = useResourcesActionsContext();
+  const { sendRequest } = useRequestContext();
 
   const styles: object = completed
     ? { color: "grey", textDecoration: "line-through" }
@@ -29,13 +29,14 @@ const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
           <Button
             className="m-2"
             onClick={() =>
-              handleTodoActions({
-                id,
-                method: HTTPMethods.PATCH,
+              sendRequest({
                 body: {
                   completed: !completed,
                   title,
                 },
+                id,
+                method: HTTPMethods.PATCH,
+                resourceName: "todos",
               })
             }
           >
@@ -55,7 +56,11 @@ const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
             className="m-2"
             displayType="danger"
             onClick={() =>
-              handleTodoActions({ id, method: HTTPMethods.DELETE })
+              sendRequest({
+                id,
+                method: HTTPMethods.DELETE,
+                resourceName: "todos",
+              })
             }
           >
             {"Delete todo"}
