@@ -85,7 +85,10 @@ const EditTodo: React.FC<IEditTodoProps> = ({
           <Button
             className="m-2"
             displayType="secondary"
-            onClick={() => setIsEditActive(false)}
+            onClick={() => {
+              if (alert) setAlert(false);
+              setIsEditActive(false);
+            }}
           >
             {"Cancel"}
           </Button>
