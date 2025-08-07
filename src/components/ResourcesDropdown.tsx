@@ -2,7 +2,7 @@ import Button from "@clayui/button";
 import DropDown from "@clayui/drop-down";
 import { useState } from "react";
 import { HTTPMethods } from "../hooks/useRequest";
-import AddTodoInput from "./todos/AddTodoInput";
+import ItemInput from "./todos/ItemInput";
 import { useRequestContext } from "../hooks/useRequestContext";
 
 type Resource = {
@@ -30,10 +30,10 @@ const items: ResourceGroup[] = [
 ];
 
 const ResourcesDropdown: React.FC = () => {
+  const [alert, setAlert] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<string>("");
-  const [value, setValue] = useState("");
 
-  const { setData, sendRequest } = useRequestContext();
+  const { sendRequest } = useRequestContext();
 
   return (
     <div className="container-fluid">
@@ -76,22 +76,14 @@ const ResourcesDropdown: React.FC = () => {
           </DropDown.ItemList>
         </DropDown>
 
-        <Button
-          className="me-3"
-          onClick={() => {
-            setData([]);
-            setSelectedItem("");
-          }}
-          displayType="secondary"
-        >
-          {"Clear Data"}
-        </Button>
-
-        {selectedItem === "todos" && (
-          <AddTodoInput value={value} setValue={setValue} />
+        {selectedItem && (
+          <ItemInput
+            alert={alert}
+            resourceName={selectedItem}
+            setSelectedItem={setSelectedItem}
+            setAlert={setAlert}
+          />
         )}
-
-        {/* // TODO: Add more selectedItem validations for photos, albums, etc. */}
       </div>
     </div>
   );
