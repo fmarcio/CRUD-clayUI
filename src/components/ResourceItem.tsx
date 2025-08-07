@@ -9,6 +9,7 @@ import {
   type ApiResourceItem,
 } from "../utils/utils";
 import Todo from "./todos/Todo";
+import Post from "./posts/Post";
 
 interface ResourceProps {
   data: ApiResourceItem;
@@ -24,15 +25,9 @@ const cardStyle: React.CSSProperties = {
 
 export default function ResourceItem({ data }: ResourceProps) {
   if (isPost(data)) {
-    return (
-      <div style={cardStyle}>
-        <h3>
-          Post: {data.title} (ID: {data.id})
-        </h3>
-        <p>{data.body}</p>
-        <small>User ID: {data.userId}</small>
-      </div>
-    );
+    const { body, id, title, userId } = data;
+
+    return <Post body={body} id={id} key={id} title={title} userId={userId} />;
   }
 
   if (isComment(data)) {
