@@ -1,7 +1,7 @@
 import Button from "@clayui/button";
 import Form, { ClayInput } from "@clayui/form";
-import { HTTPMethods } from "../../hooks/useRequest";
-import { useRequestContext } from "../../hooks/useRequestContext";
+import { HTTPMethods } from "../hooks/useRequest";
+import { useRequestContext } from "../hooks/useRequestContext";
 import { useState } from "react";
 import ClayAlert from "@clayui/alert";
 
@@ -98,6 +98,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
 
             await postItemBasedOnResourceName();
 
+            if (alert) setAlert(false);
             setItemTitle("");
             setItemBody("");
           }}

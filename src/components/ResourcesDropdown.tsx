@@ -2,7 +2,7 @@ import Button from "@clayui/button";
 import DropDown from "@clayui/drop-down";
 import { useState } from "react";
 import { HTTPMethods } from "../hooks/useRequest";
-import ItemInput from "./todos/ItemInput";
+import ItemInput from "./ItemInput";
 import { useRequestContext } from "../hooks/useRequestContext";
 
 type Resource = {
