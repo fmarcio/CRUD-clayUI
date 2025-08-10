@@ -27,6 +27,16 @@ export type PostResource = {
   body: string;
 };
 
+export type Resource = {
+  id: number;
+  name: string;
+};
+
+export type ResourceGroup = {
+  name: string;
+  resources: Resource[];
+};
+
 export type TodoResource = {
   userId: number;
   id: number;
@@ -61,6 +71,20 @@ export type ApiResourceItem =
   | PhotoResource
   | TodoResource
   | UserResource;
+
+export const resourcesNames: ResourceGroup[] = [
+  {
+    name: "Resources",
+    resources: [
+      { id: 1, name: "posts" },
+      { id: 2, name: "comments" },
+      { id: 3, name: "albums" },
+      { id: 4, name: "photos" },
+      { id: 5, name: "todos" },
+      { id: 6, name: "users" },
+    ],
+  },
+];
 
 export function isAlbum(item: ApiResourceItem): item is AlbumResource {
   return "title" in item && !("body" in item) && !("completed" in item);

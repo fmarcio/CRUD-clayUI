@@ -4,30 +4,11 @@ import { useState } from "react";
 import { HTTPMethods } from "../hooks/useRequest";
 import ItemInput from "./ItemInput";
 import { useRequestContext } from "../hooks/useRequestContext";
-
-type Resource = {
-  id: number;
-  name: string;
-};
-
-type ResourceGroup = {
-  name: string;
-  resources: Resource[];
-};
-
-const items: ResourceGroup[] = [
-  {
-    name: "Resources",
-    resources: [
-      { id: 1, name: "posts" },
-      { id: 2, name: "comments" },
-      { id: 3, name: "albums" },
-      { id: 4, name: "photos" },
-      { id: 5, name: "todos" },
-      { id: 6, name: "users" },
-    ],
-  },
-];
+import {
+  resourcesNames,
+  type Resource,
+  type ResourceGroup,
+} from "../utils/utils";
 
 const ResourcesDropdown: React.FC = () => {
   const [alert, setAlert] = useState<boolean>(false);
@@ -53,7 +34,7 @@ const ResourcesDropdown: React.FC = () => {
             placeholder="Type to filter"
           />
 
-          <DropDown.ItemList items={items}>
+          <DropDown.ItemList items={resourcesNames}>
             {({ name, resources }: ResourceGroup) => (
               <DropDown.Group header={name} items={resources} key={name}>
                 {({ id, name: selectedResource }: Resource) => (
