@@ -8,8 +8,12 @@ export enum HTTPMethods {
   PATCH = "PATCH",
 }
 
-type SendRequestOptions = {
-  method: "GET" | "POST" | "DELETE" | "PATCH";
+export type SendRequestOptions = {
+  method:
+    | HTTPMethods.GET
+    | HTTPMethods.POST
+    | HTTPMethods.DELETE
+    | HTTPMethods.PATCH;
   resourceName: string;
   body?: object;
   id?: number;
