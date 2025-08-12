@@ -23,11 +23,9 @@ const cardStyle: React.CSSProperties = {
   boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
 };
 
-export default function ResourceItem({ data }: ResourceProps) {
+const ResourceItem: React.FC<ResourceProps> = ({ data }) => {
   if (isPost(data)) {
-    const { body, id, title, userId } = data;
-
-    return <Post body={body} id={id} key={id} title={title} userId={userId} />;
+    return <Post item={data} key={data.id} />;
   }
 
   if (isComment(data)) {
@@ -82,9 +80,7 @@ export default function ResourceItem({ data }: ResourceProps) {
   }
 
   if (isTodo(data)) {
-    const { completed, id, title } = data;
-
-    return <Todo completed={completed} id={id} key={id} title={title} />;
+    return <Todo item={data} key={data.id} />;
   }
 
   if (isUser(data)) {
@@ -110,4 +106,6 @@ export default function ResourceItem({ data }: ResourceProps) {
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
-}
+};
+
+export default ResourceItem;
