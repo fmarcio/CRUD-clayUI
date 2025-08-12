@@ -1,18 +1,19 @@
 import Card from "@clayui/card";
 import React, { useState } from "react";
 import { HTTPMethods } from "../../hooks/useRequest";
-import EditTodo from "./EditTodo";
 import Button from "@clayui/button";
-import { useRequestContext } from "../../hooks/useRequestContext";
+import { useResourcesContext } from "../../hooks/useResourcesContext";
+import EditItem from "../EditItem";
+import { type TodoResource } from "../../utils/utils";
 interface ITodoProps {
-  completed: boolean;
-  id: number;
-  title: string;
+  item: TodoResource;
 }
 
-const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
+const Todo: React.FC<ITodoProps> = ({ item }) => {
+  const { completed, id, title } = item;
+  const { sendRequest } = useResourcesContext();
+
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
-  const { sendRequest } = useRequestContext();
 
   const styles: object = completed
     ? { color: "grey", textDecoration: "line-through" }
@@ -44,9 +45,8 @@ const Todo: React.FC<ITodoProps> = ({ completed, id, title }) => {
           </Button>
         )}
 
-        <EditTodo
-          completed={completed}
-          id={id}
+        <EditItem
+          item={item}
           isEditActive={isEditActive}
           setIsEditActive={setIsEditActive}
         />
