@@ -1,15 +1,12 @@
 import "./App.css";
 import ResourcesApp from "./components/ResourcesApp";
-import { RequestProvider } from "./components/providers/RequestProvider";
-import { ResourcesActionsProvider } from "./components/providers/ResourcesActionsProvider";
+import { ResourcesProvider } from "./components/providers/ResourcesProvider";
 
 function App() {
   return (
-    <RequestProvider>
-      <ResourcesActionsProvider>
-        <ResourcesApp />
-      </ResourcesActionsProvider>
-    </RequestProvider>
+    <ResourcesProvider>
+      <ResourcesApp />
+    </ResourcesProvider>
   );
 }
 
