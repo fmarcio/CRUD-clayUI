@@ -19,8 +19,14 @@ export type SendRequestOptions = {
   id?: number;
 };
 
-export const useRequest = () => {
-  const [data, setData] = useState<ApiResourceItem[] | null>([]);
+/* 
+  useRequest does not manage data state. 
+  It will receive setData function as an arg to update the state in ResourcesProvider
+ */
+
+export const useRequest = (
+  setData: React.Dispatch<React.SetStateAction<ApiResourceItem[]>>
+) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   // Starting at 1 to avoid generating an ID of 0, which can be a real server ID.
@@ -33,13 +39,7 @@ export const useRequest = () => {
   };
 
   const onDeleteItem = (idToDelete: number) => {
-    setData((prevData) => {
-      if (!prevData) {
-        return null;
-      }
-
-      return prevData.filter((item) => item.id !== idToDelete);
-    });
+    setData((prevData) => prevData.filter((item) => item.id !== idToDelete));
   };
 
   const sendRequest = async ({
@@ -68,20 +68,22 @@ export const useRequest = () => {
           method: HTTPMethods.POST,
         });
 
-        if (data) {
-          const newPost = await post.json();
+        const newPost = await post.json();
 
-          // The JSON Placeholder API returns an ID with the same value (201) for every POST made
-          // So, it was necessary to create an unique client-side ID to manage UI state correctly
-          // Using a negative counter avoids clashes with real IDs from GET
-          const uniqueClientPost = {
-            ...newPost,
-            id: -tempIdCounter,
-          };
+        // The JSON Placeholder API returns an ID with the same value (201) for every POST made
+        // So, it was necessary to create an unique client-side ID to manage UI state correctly
+        // Using a negative counter avoids clashes with real IDs from GET
 
-          setTempIdCounter((prevCounter) => prevCounter + 1);
-          setData([uniqueClientPost as ApiResourceItem, ...data]);
-        }
+        const uniqueClientPost = {
+          ...newPost,
+          id: -tempIdCounter,
+        };
+
+        setTempIdCounter((prevCounter) => prevCounter + 1);
+        setData((prevData) => [
+          uniqueClientPost as ApiResourceItem,
+          ...prevData,
+        ]);
       }
 
       if (method === HTTPMethods.DELETE) {
@@ -102,15 +104,11 @@ export const useRequest = () => {
         }).then((response) => response.json());
 
         if (updatedItem) {
-          setData((prevData) => {
-            if (!prevData) {
-              return null;
-            }
-
-            return prevData.map((item) =>
+          setData((prevData) =>
+            prevData.map((item) =>
               item.id === id ? { ...item, ...updatedItem } : item
-            );
-          });
+            )
+          );
         }
       }
     } catch (error) {
@@ -121,10 +119,8 @@ export const useRequest = () => {
   };
 
   return {
-    data,
     loading,
     sendRequest,
-    setData,
   };
 };
 
