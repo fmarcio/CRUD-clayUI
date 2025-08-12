@@ -3,20 +3,19 @@ import React, { useState } from "react";
 import { HTTPMethods } from "../../hooks/useRequest";
 import Button from "@clayui/button";
 import { Heading } from "@clayui/core";
-import { useRequestContext } from "../../hooks/useRequestContext";
+import { type PostResource } from "../../utils/utils";
+import { useResourcesContext } from "../../hooks/useResourcesContext";
+import EditItem from "../EditItem";
 
 interface IPostProps {
-  body: string;
-  id: number;
-  title: string;
-  userId: number;
+  item: PostResource;
 }
 
-// TODO: finish POST component by adding edit options
+const Post: React.FC<IPostProps> = ({ item }) => {
+  const { body, id, title, userId } = item;
 
-const Post: React.FC<IPostProps> = ({ body, id, title, userId }) => {
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
-  const { sendRequest } = useRequestContext();
+  const { sendRequest } = useResourcesContext();
 
   return (
     <Card>
@@ -29,7 +28,11 @@ const Post: React.FC<IPostProps> = ({ body, id, title, userId }) => {
           {body}
         </Card.Description>
 
-        <p className="text-italic">{`User ID: ${userId}`}</p>
+        <EditItem
+          item={item}
+          isEditActive={isEditActive}
+          setIsEditActive={setIsEditActive}
+        />
 
         {!isEditActive && (
           <Button
@@ -46,6 +49,8 @@ const Post: React.FC<IPostProps> = ({ body, id, title, userId }) => {
             {"Delete post"}
           </Button>
         )}
+
+        <p className="mt-2 text-italic">{`User ID: ${userId}`}</p>
       </Card.Body>
     </Card>
   );
