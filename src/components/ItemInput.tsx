@@ -1,14 +1,13 @@
 import Button from "@clayui/button";
 import Form, { ClayInput } from "@clayui/form";
 import { HTTPMethods } from "../hooks/useRequest";
-import { useRequestContext } from "../hooks/useRequestContext";
 import { useState } from "react";
 import ClayAlert from "@clayui/alert";
+import { useResourcesContext } from "../hooks/useResourcesContext";
 
 interface IAddTodoInputProps {
   alert: boolean;
   setAlert: (alert: boolean) => void;
-  setSelectedItem: (selectedItem: string) => void;
   resourceName: string;
 }
 
@@ -16,14 +15,13 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
   alert,
   resourceName,
   setAlert,
-  setSelectedItem,
 }) => {
   const [itemBody, setItemBody] = useState<string>("");
   const [itemTitle, setItemTitle] = useState<string>("");
 
-  const { sendRequest, setData } = useRequestContext();
+  const { sendRequest, setData, setSelectedResource } = useResourcesContext();
 
-  const areInputsValid = () => {
+  const areInputsValid = (): boolean => {
     if (resourceName === "todos") {
       if (!itemTitle) {
         return false;
@@ -37,7 +35,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
     return true;
   };
 
-  const postItemBasedOnResourceName = async () => {
+  const postItemBasedOnResourceName = async (): Promise<void> => {
     const resourcePayloads: { [key: string]: object } = {
       todos: {
         completed: false,
@@ -46,6 +44,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
       posts: {
         body: itemBody,
         title: itemTitle,
+        userId: Math.floor(Math.random() * 100),
       },
       comments: {
         body: itemBody,
@@ -69,7 +68,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
       <Form.Group className="d-flex justify-content-center align-items-center mb-0 p-2">
         <ClayInput
           id="add-todo-input"
-          placeholder="Add new todo here..."
+          placeholder="Add new item here..."
           type="text"
           value={itemTitle}
           onChange={(e) => setItemTitle(e.target.value)}
@@ -111,7 +110,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
           onClick={() => {
             if (alert) setAlert(false);
             setData([]);
-            setSelectedItem("");
+            setSelectedResource("");
           }}
           displayType="secondary"
         >

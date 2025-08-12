@@ -3,18 +3,18 @@ import DropDown from "@clayui/drop-down";
 import { useState } from "react";
 import { HTTPMethods } from "../hooks/useRequest";
 import ItemInput from "./ItemInput";
-import { useRequestContext } from "../hooks/useRequestContext";
 import {
   resourcesNames,
   type Resource,
   type ResourceGroup,
 } from "../utils/utils";
+import { useResourcesContext } from "../hooks/useResourcesContext";
 
 const ResourcesDropdown: React.FC = () => {
   const [alert, setAlert] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<string>("");
 
-  const { sendRequest } = useRequestContext();
+  const { sendRequest, selectedResource, setSelectedResource } =
+    useResourcesContext();
 
   return (
     <div className="container-fluid">
@@ -24,7 +24,7 @@ const ResourcesDropdown: React.FC = () => {
           filterKey="name"
           trigger={
             <Button displayType="primary">
-              {selectedItem || "Select Resource"}
+              {selectedResource || "Select Resource"}
             </Button>
           }
           triggerIcon="caret-bottom"
@@ -41,7 +41,7 @@ const ResourcesDropdown: React.FC = () => {
                   <DropDown.Item
                     key={id}
                     onClick={() => {
-                      setSelectedItem(selectedResource);
+                      setSelectedResource(selectedResource);
 
                       sendRequest({
                         method: HTTPMethods.GET,
@@ -57,11 +57,10 @@ const ResourcesDropdown: React.FC = () => {
           </DropDown.ItemList>
         </DropDown>
 
-        {selectedItem && (
+        {selectedResource && (
           <ItemInput
             alert={alert}
-            resourceName={selectedItem}
-            setSelectedItem={setSelectedItem}
+            resourceName={selectedResource}
             setAlert={setAlert}
           />
         )}

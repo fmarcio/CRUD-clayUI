@@ -2,16 +2,16 @@ import { useState, useEffect, useMemo } from "react";
 import { Provider } from "@clayui/core";
 import "@clayui/css/lib/css/atlas.css";
 import ResourceItem from "./ResourceItem";
-import { useRequestContext } from "../hooks/useRequestContext";
 import LoadingIndicator from "@clayui/loading-indicator";
 import ResourcesDropdown from "./ResourcesDropdown";
 import EmptyState from "@clayui/empty-state";
 import Pagination from "./Pagination";
+import { useResourcesContext } from "../hooks/useResourcesContext";
 
 const ITEMS_PER_PAGE = 20;
 
 const ResourcesManager: React.FC = () => {
-  const { loading, data } = useRequestContext();
+  const { loading, data } = useResourcesContext();
   const [currentPage, setCurrentPage] = useState(1);
 
   const hasResources = !loading && data && data.length > 0;
