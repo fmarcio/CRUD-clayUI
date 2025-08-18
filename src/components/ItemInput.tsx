@@ -4,6 +4,7 @@ import { HTTPMethods } from "../hooks/useRequest";
 import { useState } from "react";
 import ClayAlert from "@clayui/alert";
 import { useResourcesContext } from "../hooks/useResourcesContext";
+import { areInputsValid } from "../utils/utils";
 
 interface IAddTodoInputProps {
   alert: boolean;
@@ -21,20 +22,6 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
 
   const { sendRequest, setData, setSelectedResource } = useResourcesContext();
 
-  const areInputsValid = (): boolean => {
-    if (resourceName === "todos") {
-      if (!itemTitle) {
-        return false;
-      }
-    } else if (resourceName === "posts" || resourceName === "comments") {
-      if (!itemTitle || !itemBody) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-
   const postItemBasedOnResourceName = async (): Promise<void> => {
     const resourcePayloads: { [key: string]: object } = {
       todos: {
@@ -49,6 +36,8 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
       comments: {
         body: itemBody,
         name: itemTitle,
+        postId: Math.floor(Math.random() * 100),
+        email: "user@example.com",
       },
     };
 
@@ -90,7 +79,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
         <Button
           className="mr-2"
           onClick={async () => {
-            if (!areInputsValid()) {
+            if (!areInputsValid({ resourceName, itemBody, itemTitle })) {
               setAlert(true);
               return;
             }

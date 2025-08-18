@@ -86,6 +86,26 @@ export const resourcesNames: ResourceGroup[] = [
   },
 ];
 
+export const areInputsValid = ({
+  resourceName,
+  itemBody,
+  itemTitle,
+}: {
+  resourceName: string;
+  itemBody: string;
+  itemTitle: string;
+}): boolean => {
+  if (resourceName === "todos") {
+    return !!itemTitle;
+  }
+
+  if (resourceName === "posts" || resourceName === "comments") {
+    return !!itemTitle && !!itemBody;
+  }
+
+  return true;
+};
+
 export function isAlbum(item: ApiResourceItem): item is AlbumResource {
   return "title" in item && !("body" in item) && !("completed" in item);
 }

@@ -5,6 +5,7 @@ import Button from "@clayui/button";
 import { HTTPMethods } from "../hooks/useRequest";
 import {
   type ApiResourceItem,
+  areInputsValid,
   isAlbum,
   isComment,
   isPhoto,
@@ -59,7 +60,7 @@ const EditItem: React.FC<IEditItemProps> = ({
   }, []);
 
   const handleUpdate = async () => {
-    if (!itemTitle) {
+    if (!areInputsValid({ resourceName, itemBody, itemTitle })) {
       setAlert(true);
       return;
     }
