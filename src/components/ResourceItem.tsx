@@ -8,6 +8,7 @@ import {
   isUser,
   type ApiResourceItem,
 } from "../utils/utils";
+import Comment from "./comments/Comment";
 import Todo from "./todos/Todo";
 import Post from "./posts/Post";
 
@@ -29,17 +30,7 @@ const ResourceItem: React.FC<ResourceProps> = ({ data }) => {
   }
 
   if (isComment(data)) {
-    return (
-      <div style={cardStyle}>
-        <h4>
-          Comment by: {data.name} (ID: {data.id})
-        </h4>
-        <p>{data.body}</p>
-        <small>
-          Email: {data.email} | Post ID: {data.postId}
-        </small>
-      </div>
-    );
+    return <Comment item={data} key={data.id} />;
   }
 
   if (isAlbum(data)) {

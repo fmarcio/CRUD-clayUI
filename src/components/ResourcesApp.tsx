@@ -11,7 +11,7 @@ import { useResourcesContext } from "../hooks/useResourcesContext";
 const ITEMS_PER_PAGE = 20;
 
 const ResourcesManager: React.FC = () => {
-  const { loading, data } = useResourcesContext();
+  const { data, loading } = useResourcesContext();
   const [currentPage, setCurrentPage] = useState(1);
 
   const hasResources = !loading && data && data.length > 0;
