@@ -6,6 +6,7 @@ import { Heading } from "@clayui/core";
 import { type PostResource } from "../../utils/utils";
 import { useResourcesContext } from "../../hooks/useResourcesContext";
 import EditItem from "../EditItem";
+import ItemModal from "../ItemModal";
 
 interface IPostProps {
   item: PostResource;
@@ -15,6 +16,7 @@ const Post: React.FC<IPostProps> = ({ item }) => {
   const { body, id, title, userId } = item;
 
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { sendRequest } = useResourcesContext();
 
   return (
@@ -38,19 +40,29 @@ const Post: React.FC<IPostProps> = ({ item }) => {
           <Button
             className="m-2"
             displayType="danger"
-            onClick={() =>
-              sendRequest({
-                id,
-                method: HTTPMethods.DELETE,
-                resourceName: "posts",
-              })
-            }
+            onClick={() => setIsModalOpen(true)}
           >
             {"Delete post"}
           </Button>
         )}
 
         <p className="mt-2 text-italic">{`User ID: ${userId}`}</p>
+
+        {isModalOpen && (
+          <ItemModal
+            isOpen={isModalOpen}
+            modalText={"Are you sure you want to delete this post?"}
+            modalTitle={"Delete post"}
+            onClose={() => setIsModalOpen(false)}
+            sendRequest={() => {
+              sendRequest({
+                id,
+                method: HTTPMethods.DELETE,
+                resourceName: "posts",
+              });
+            }}
+          />
+        )}
       </Card.Body>
     </Card>
   );

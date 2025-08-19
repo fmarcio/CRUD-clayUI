@@ -5,6 +5,7 @@ import Button from "@clayui/button";
 import { useResourcesContext } from "../../hooks/useResourcesContext";
 import EditItem from "../EditItem";
 import { type TodoResource } from "../../utils/utils";
+import ItemModal from "../ItemModal";
 interface ITodoProps {
   item: TodoResource;
 }
@@ -14,6 +15,7 @@ const Todo: React.FC<ITodoProps> = ({ item }) => {
   const { sendRequest } = useResourcesContext();
 
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const styles: object = completed
     ? { color: "grey", textDecoration: "line-through" }
@@ -55,16 +57,26 @@ const Todo: React.FC<ITodoProps> = ({ item }) => {
           <Button
             className="m-2"
             displayType="danger"
-            onClick={() =>
+            onClick={() => setIsModalOpen(true)}
+          >
+            {"Delete todo"}
+          </Button>
+        )}
+
+        {isModalOpen && (
+          <ItemModal
+            isOpen={isModalOpen}
+            modalText="Are you sure you want to delete this todo?"
+            modalTitle="Delete Todo"
+            onClose={() => setIsModalOpen(false)}
+            sendRequest={() =>
               sendRequest({
                 id,
                 method: HTTPMethods.DELETE,
                 resourceName: "todos",
               })
             }
-          >
-            {"Delete todo"}
-          </Button>
+          />
         )}
       </Card.Body>
     </Card>

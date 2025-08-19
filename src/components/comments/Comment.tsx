@@ -7,6 +7,7 @@ import { type CommentResource } from "../../utils/utils";
 import { useResourcesContext } from "../../hooks/useResourcesContext";
 import EditItem from "../EditItem";
 import Label, { LabelColors } from "../Label";
+import ItemModal from "../ItemModal";
 
 interface ICommentProps {
   item: CommentResource;
@@ -16,6 +17,7 @@ const Comment: React.FC<ICommentProps> = ({ item }) => {
   const { body, email, id, name } = item;
 
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { sendRequest } = useResourcesContext();
 
   return (
@@ -47,16 +49,26 @@ const Comment: React.FC<ICommentProps> = ({ item }) => {
           <Button
             className="m-2"
             displayType="danger"
-            onClick={() =>
+            onClick={() => setIsModalOpen(true)}
+          >
+            {"Delete comment"}
+          </Button>
+        )}
+
+        {isModalOpen && (
+          <ItemModal
+            isOpen={isModalOpen}
+            modalText="Are you sure you want to delete this comment?"
+            modalTitle="Delete Comment"
+            onClose={() => setIsModalOpen(false)}
+            sendRequest={() =>
               sendRequest({
                 id,
                 method: HTTPMethods.DELETE,
                 resourceName: "comments",
               })
             }
-          >
-            {"Delete comment"}
-          </Button>
+          />
         )}
       </Card.Body>
     </Card>
