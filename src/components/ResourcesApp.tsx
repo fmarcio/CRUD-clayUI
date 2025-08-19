@@ -12,7 +12,7 @@ const ITEMS_PER_PAGE = 20;
 
 const ResourcesManager: React.FC = () => {
   const { data, loading } = useResourcesContext();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const hasResources = !loading && data && data.length > 0;
 
