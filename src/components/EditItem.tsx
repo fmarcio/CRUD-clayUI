@@ -6,12 +6,9 @@ import { HTTPMethods } from "../hooks/useRequest";
 import {
   type ApiResourceItem,
   areInputsValid,
-  isAlbum,
   isComment,
-  isPhoto,
   isPost,
   isTodo,
-  isUser,
 } from "../utils/utils";
 import { useResourcesContext } from "../hooks/useResourcesContext";
 
@@ -22,10 +19,10 @@ interface IEditItemProps {
 }
 
 const getInitialTitle = (item: ApiResourceItem): string => {
-  if (isTodo(item) || isPost(item) || isAlbum(item) || isPhoto(item)) {
+  if (isTodo(item) || isPost(item)) {
     return item.title;
   }
-  if (isComment(item) || isUser(item)) {
+  if (isComment(item)) {
     return item.name;
   }
   return "";
@@ -105,17 +102,10 @@ const EditItem: React.FC<IEditItemProps> = ({
           )}
 
           <Form.Group className="d-flex flex-column justify-content-center align-items-center mb-0 p-2">
-            <ClayInput
-              className="mb-2"
-              id={`edit-item-title-${item.id}`}
-              placeholder="New title here"
-              type="text"
-              value={itemTitle}
-              onChange={(e) => setItemTitle(e.target.value)}
-            />
-
             {showBodyInput && (
               <ClayInput
+                className="mb-2"
+                component="textarea"
                 id={`edit-item-body-${item.id}`}
                 placeholder="New body here"
                 type="text"
@@ -123,6 +113,14 @@ const EditItem: React.FC<IEditItemProps> = ({
                 onChange={(e) => setItemBody(e.target.value)}
               />
             )}
+
+            <ClayInput
+              id={`edit-item-title-${item.id}`}
+              placeholder="New title here"
+              type="text"
+              value={itemTitle}
+              onChange={(e) => setItemTitle(e.target.value)}
+            />
 
             <Button.Group className="mt-2">
               <Button className="m-1" onClick={handleUpdate} type="submit">
