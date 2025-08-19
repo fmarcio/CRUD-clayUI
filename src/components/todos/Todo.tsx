@@ -69,13 +69,15 @@ const Todo: React.FC<ITodoProps> = ({ item }) => {
             modalText="Are you sure you want to delete this todo?"
             modalTitle="Delete Todo"
             onClose={() => setIsModalOpen(false)}
-            sendRequest={() =>
-              sendRequest({
+            onConfirm={async () => {
+              await sendRequest({
                 id,
                 method: HTTPMethods.DELETE,
                 resourceName: "todos",
-              })
-            }
+              });
+
+              setIsModalOpen(false);
+            }}
           />
         )}
       </Card.Body>

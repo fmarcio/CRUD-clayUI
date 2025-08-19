@@ -61,13 +61,15 @@ const Comment: React.FC<ICommentProps> = ({ item }) => {
             modalText="Are you sure you want to delete this comment?"
             modalTitle="Delete Comment"
             onClose={() => setIsModalOpen(false)}
-            sendRequest={() =>
-              sendRequest({
+            onConfirm={async () => {
+              await sendRequest({
                 id,
                 method: HTTPMethods.DELETE,
                 resourceName: "comments",
-              })
-            }
+              });
+
+              setIsModalOpen(false);
+            }}
           />
         )}
       </Card.Body>

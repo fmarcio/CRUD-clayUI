@@ -51,15 +51,17 @@ const Post: React.FC<IPostProps> = ({ item }) => {
         {isModalOpen && (
           <ItemModal
             isOpen={isModalOpen}
-            modalText={"Are you sure you want to delete this post?"}
-            modalTitle={"Delete post"}
+            modalText="Are you sure you want to delete this post?"
+            modalTitle="Delete post"
             onClose={() => setIsModalOpen(false)}
-            sendRequest={() => {
-              sendRequest({
+            onConfirm={async () => {
+              await sendRequest({
                 id,
                 method: HTTPMethods.DELETE,
                 resourceName: "posts",
               });
+
+              setIsModalOpen(false);
             }}
           />
         )}

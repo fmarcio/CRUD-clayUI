@@ -9,7 +9,7 @@ interface IItemModalProps {
   modalText: string;
   modalTitle: string;
   onClose: () => void;
-  sendRequest: () => void;
+  onConfirm: () => void;
 }
 
 const ItemModal: React.FC<IItemModalProps> = ({
@@ -17,21 +17,15 @@ const ItemModal: React.FC<IItemModalProps> = ({
   modalText,
   modalTitle,
   onClose,
-  sendRequest,
+  onConfirm,
 }) => {
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div
-      className="fixed inset-0 bg-gray-200 z-50 flex justify-center items-center"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md"
-        onClick={(event) => event.stopPropagation()}
-      >
+    <div className="fixed inset-0 bg-gray-200 z-50 flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
         <div className="text-center">
           <Heading level={3}>{modalTitle}</Heading>
 
@@ -42,7 +36,7 @@ const ItemModal: React.FC<IItemModalProps> = ({
           </div>
 
           <div className="items-center px-4 py-3">
-            <Button className="mr-2" onClick={sendRequest}>
+            <Button className="mr-2" onClick={onConfirm}>
               Confirm
             </Button>
 
