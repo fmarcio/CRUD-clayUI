@@ -57,7 +57,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
       <Form.Group className="d-flex justify-content-center align-items-center mb-0 p-2">
         <ClayInput
           id="add-todo-input"
-          placeholder="Add new item here..."
+          placeholder="Add new title here..."
           type="text"
           value={itemTitle}
           onChange={(e) => setItemTitle(e.target.value)}
