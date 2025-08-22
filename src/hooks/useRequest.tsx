@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import type { ApiResourceItem } from "../utils/utils";
 
 export enum HTTPMethods {
@@ -19,107 +19,96 @@ export type SendRequestOptions = {
   id?: number;
 };
 
-/* 
-  useRequest does not manage data state. 
-  It will receive setData function as an arg to update the state in ResourcesProvider
- */
-
-export const useRequest = (
-  setData: React.Dispatch<React.SetStateAction<ApiResourceItem[]>>
-) => {
+export const useRequest = () => {
+  const [data, setData] = useState<ApiResourceItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
 
   // Starting at 1 to avoid generating an ID of 0, which can be a real server ID.
   const [tempIdCounter, setTempIdCounter] = useState<number>(1);
 
   const endpoint: string = "https://jsonplaceholder.typicode.com/";
 
-  const headers = {
-    "Content-type": "application/json; charset=UTF-8",
-  };
+  const sendRequest = useCallback(
+    async ({ method, resourceName, body, id }: SendRequestOptions) => {
+      setLoading(true);
+      setError(null);
 
-  const onDeleteItem = (idToDelete: number) => {
-    setData((prevData) => prevData.filter((item) => item.id !== idToDelete));
-  };
+      try {
+        const url = id
+          ? `${endpoint}${resourceName}/${id}`
+          : `${endpoint}${resourceName}`;
 
-  const sendRequest = async ({
-    method,
-    resourceName,
-    body,
-    id,
-  }: SendRequestOptions) => {
-    setLoading(true);
-
-    try {
-      if (method === HTTPMethods.GET) {
-        const data = await fetch(`${endpoint}${resourceName}`).then(
-          (response) => response.json()
-        );
-
-        if (data) {
-          setData(data);
-        }
-      }
-
-      if (method === HTTPMethods.POST) {
-        const post = await fetch(`${endpoint}${resourceName}`, {
-          body: JSON.stringify(body),
-          headers,
-          method: HTTPMethods.POST,
+        const response = await fetch(url, {
+          method,
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+          body: body ? JSON.stringify(body) : undefined,
         });
 
-        const newPost = await post.json();
-
-        // The JSON Placeholder API returns an ID with the same value (201) for every POST made
-        // So, it was necessary to create an unique client-side ID to manage UI state correctly
-        // Using a negative counter avoids clashes with real IDs from GET
-
-        const uniqueClientPost = {
-          ...newPost,
-          id: -tempIdCounter,
-        };
-
-        setTempIdCounter((prevCounter) => prevCounter + 1);
-        setData((prevData) => [
-          uniqueClientPost as ApiResourceItem,
-          ...prevData,
-        ]);
-      }
-
-      if (method === HTTPMethods.DELETE) {
-        const response = await fetch(`${endpoint}${resourceName}/${id}`, {
-          method: HTTPMethods.DELETE,
-        });
-
-        if (response.ok) {
-          onDeleteItem(id!);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      }
 
-      if (method === HTTPMethods.PATCH) {
-        const updatedItem = await fetch(`${endpoint}${resourceName}/${id}`, {
-          body: JSON.stringify(body),
-          headers,
-          method: HTTPMethods.PATCH,
-        }).then((response) => response.json());
+        switch (method) {
+          case HTTPMethods.GET: {
+            const result = await response.json();
+            setData(result);
+            break;
+          }
+          case HTTPMethods.POST: {
+            const newPost = await response.json();
 
-        if (updatedItem) {
-          setData((prevData) =>
-            prevData.map((item) =>
-              item.id === id ? { ...item, ...updatedItem } : item
-            )
-          );
+            // The JSON Placeholder API returns an ID with the same value (201) for every POST made
+            // So, it was necessary to create an unique client-side ID to manage UI state correctly
+            // Using a negative counter avoids clashes with real IDs from GET
+
+            const uniqueClientPost = {
+              ...newPost,
+              id: -tempIdCounter,
+            };
+
+            setTempIdCounter((prevCounter) => prevCounter + 1);
+
+            setData((prevData) => [
+              uniqueClientPost as ApiResourceItem,
+              ...prevData,
+            ]);
+            break;
+          }
+          case HTTPMethods.PATCH: {
+            const updatedItem = await response.json();
+
+            setData((prevData) =>
+              prevData.map((item) =>
+                item.id === id ? { ...item, ...updatedItem } : item
+              )
+            );
+
+            break;
+          }
+          case HTTPMethods.DELETE: {
+            setData((prevData) => prevData.filter((item) => item.id !== id));
+
+            break;
+          }
         }
+      } catch (error: any) {
+        setError(error);
+        console.error("Request failed:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error(`Request error: ${error}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [tempIdCounter]
+  );
 
   return {
+    data,
+    setData,
     loading,
+    error,
     sendRequest,
   };
 };
