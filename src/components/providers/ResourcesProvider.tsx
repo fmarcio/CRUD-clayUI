@@ -1,25 +1,42 @@
-import React, { useState, useMemo, type ReactNode } from "react";
-import { useRequest } from "../../hooks/useRequest";
-import { type ApiResourceItem } from "../../utils/utils";
+import React, { useState, useMemo, type ReactNode, useCallback } from "react";
+import useRequest from "../../hooks/useRequest";
 import { ResourcesContext } from "../../context/ResourcesContext";
 
 export const ResourcesProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [data, setData] = useState<ApiResourceItem[]>([]);
+  const { data, loading, error, sendRequest, setData } = useRequest();
   const [selectedResource, setSelectedResource] = useState<string>("");
-  const { loading, sendRequest } = useRequest(setData);
+
+  const handleSetSelectedResource = useCallback(
+    (resource: string) => {
+      if (resource === "") {
+        setData([]);
+      }
+      setSelectedResource(resource);
+    },
+    [setData]
+  );
 
   const value = useMemo(
     () => ({
       data,
       loading,
+      error,
       selectedResource,
       sendRequest,
       setData,
-      setSelectedResource,
+      setSelectedResource: handleSetSelectedResource,
     }),
-    [data, loading, selectedResource, sendRequest]
+    [
+      data,
+      loading,
+      error,
+      selectedResource,
+      sendRequest,
+      setData,
+      handleSetSelectedResource,
+    ]
   );
 
   return (
