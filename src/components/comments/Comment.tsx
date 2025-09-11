@@ -20,6 +20,9 @@ const Comment: React.FC<ICommentProps> = ({ item }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { sendRequest } = useResourcesContext();
 
+  console.log("test comment");
+  console.log("opa!");
+
   return (
     <Card>
       <Card.Body>
