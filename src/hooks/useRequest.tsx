@@ -57,10 +57,10 @@ const requestReducer = (state: State, action: Action): State => {
     case "GET_SUCCESS":
       return { ...state, loading: false, data: action.payload };
 
-    case "POST_SUCCESS":
-      // The JSON Placeholder API returns an ID with the same value (201) for every POST made
-      // So, it was necessary to create an unique client-side ID to manage UI state correctly
-      // Using a negative counter avoids clashes with real IDs from GET
+    case "POST_SUCCESS": {
+      /* Using a negative counter avoids clashes with real IDs from GET
+    So, it was necessary to create an unique client-side ID to manage UI state correctly
+    The JSON Placeholder API returns an ID with the same value (201) for every POST made */
 
       const uniqueClientPost = {
         ...action.payload,
@@ -73,6 +73,7 @@ const requestReducer = (state: State, action: Action): State => {
         data: [uniqueClientPost, ...state.data],
         tempIdCounter: state.tempIdCounter + 1,
       };
+    }
 
     case "PATCH_SUCCESS":
       return {
