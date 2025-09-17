@@ -1,5 +1,7 @@
 # About the project
 
+Deployed [here](https://fmarcio.github.io/CRUD-clayUI/)
+
 Just a simple web app to play around with [Clay UI by Liferay](https://clayui.com/)
 
 This project uses [JSON API Placeholder](https://jsonplaceholder.typicode.com/) to manipulate mocked data to render components in a list.
