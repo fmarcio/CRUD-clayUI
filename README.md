@@ -1,72 +1,80 @@
-# About the project
+# Clay UI CRUD Manager
 
-Deployed [here](https://fmarcio.github.io/CRUD-clayUI/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://fmarcio.github.io/CRUD-clayUI/)
 
-Just a simple web app to play around with [Clay UI by Liferay](https://clayui.com/)
+A modern, responsive CRUD (Create, Read, Update, Delete) application built to explore **[Clay UI](https://clayui.com/)** components and advanced React patterns.
 
-This project uses [JSON API Placeholder](https://jsonplaceholder.typicode.com/) to manipulate mocked data to render components in a list.
+## 🚀 Live Deployment
+The application is live and can be accessed here:
+**[https://fmarcio.github.io/CRUD-clayUI/](https://fmarcio.github.io/CRUD-clayUI/)**
 
-Although this is a simple CRUD app, its code uses some React advanced hooks like useReducer and useContext to keep code organized and manipulate complex states in an easier way.
+---
 
-# How to intall and run the app
+## 📖 Overview
 
-Just clone this repo and install dependencies using `npm install`
+This project serves as a practical demonstration of integrating **Liferay's Clay UI** system within a React application. It manages various resources (Posts, Comments, Todos) fetched from the **[JSONPlaceholder API](https://jsonplaceholder.typicode.com/)**.
 
-After that, run `npm run dev`
+While the application appears simple, it leverages professional-grade state management and architectural patterns to ensure scalability and maintainability.
 
-To run the unit tests, run `npm run test`
+## ✨ Key Features
 
-# React + TypeScript + Vite
+- **Resource Management:** Browse and interact with different resource types (Posts, Comments, Todos).
+- **Advanced State Management:** Utilizes `useReducer` and `useContext` for robust, centralized state handling.
+- **Responsive UI:** Built with Clay UI components for a consistent, accessible, and professional look.
+- **Pagination:** Efficiently handles large datasets with built-in pagination support.
+- **Form Handling:** Integrated modals and forms for resource manipulation.
+- **Testing:** Comprehensive unit tests using Jest and React Testing Library.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🛠️ Built With
 
-Currently, two official plugins are available:
+- **React 16.14** - UI library
+- **TypeScript** - Static typing
+- **Vite** - Build tool and dev server
+- **Clay UI** - Liferay's design system components
+- **Tailwind CSS** - Utility-first CSS framework
+- **Jest & React Testing Library** - Testing suite
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+- Node.js (Latest LTS recommended)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/fmarcio/CRUD-clayUI.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd CRUD-clayUI
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running the App
+
+Start the development server:
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Running Tests
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+Execute the unit test suite:
+```bash
+npm run test
+```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+### Building for Production
+
+Create a production build:
+```bash
+npm run build
 ```
