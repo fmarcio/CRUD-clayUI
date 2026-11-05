@@ -28,6 +28,7 @@ interface State {
 
 type Action =
   | { type: "FETCH_START" }
+  | { type: "GET_START" }
   | { type: "FETCH_ERROR"; payload: Error }
   | { type: "SET_DATA"; payload: ApiResourceItem[] }
   | { type: "GET_SUCCESS"; payload: ApiResourceItem[] }
@@ -47,6 +48,10 @@ const requestReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "FETCH_START":
       return { ...state, loading: true, error: null };
+
+    // Loading a resource replaces the whole list, so the previous one is dropped
+    case "GET_START":
+      return { ...state, loading: true, error: null, data: [] };
 
     case "FETCH_ERROR":
       return { ...state, loading: false, error: action.payload };
@@ -105,7 +110,9 @@ export const useRequest = () => {
 
   const sendRequest = useCallback(
     async ({ method, resourceName, body, id }: SendRequestOptions) => {
-      dispatch({ type: "FETCH_START" });
+      dispatch({
+        type: method === HTTPMethods.GET ? "GET_START" : "FETCH_START",
+      });
 
       try {
         const url = id

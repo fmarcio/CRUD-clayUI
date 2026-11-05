@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Provider } from "@clayui/core";
 import "@clayui/css/lib/css/atlas.css";
 // Vite resolves this to a base-aware URL in dev and production builds
@@ -13,32 +13,59 @@ import { useResourcesContext } from "../hooks/useResourcesContext";
 const ITEMS_PER_PAGE = 20;
 
 const ResourcesManager: React.FC = () => {
-  const { data, loading } = useResourcesContext();
+  const { data, loading, selectedResource } = useResourcesContext();
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const previousDataLength = useRef<number>(data.length);
 
-  const hasResources = !loading && data && data.length > 0;
+  /* The list stays mounted while an item is being changed (PATCH, POST,
+  DELETE), so cards keep their state and the user keeps their page */
+  const hasResources = data.length > 0;
+  const isUpdating = loading && hasResources;
+
+  const totalPages = Math.max(1, Math.ceil(data.length / ITEMS_PER_PAGE));
+
+  // Deleting the last items of the last page must not leave an empty page
+  const page = Math.min(currentPage, totalPages);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [data]);
+  }, [selectedResource]);
+
+  useEffect(() => {
+    // New items are added to the top of the list, so show the first page
+    if (data.length > previousDataLength.current) {
+      setCurrentPage(1);
+    }
+
+    previousDataLength.current = data.length;
+  }, [data.length]);
 
   const paginatedData = useMemo(() => {
-    if (!data) return [];
-
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
 
     return data.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [data, currentPage]);
+  }, [data, page]);
 
   return (
     <>
       <ResourcesDropdown />
 
-      {loading && <LoadingIndicator displayType="secondary" size="md" />}
+      {loading && !hasResources && (
+        <LoadingIndicator displayType="secondary" size="md" />
+      )}
 
       {hasResources && (
         <>
-          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+          <div
+            aria-busy={isUpdating}
+            className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3"
+            data-testid="resources-list"
+            style={{
+              opacity: isUpdating ? 0.6 : 1,
+              pointerEvents: isUpdating ? "none" : "auto",
+              transition: "opacity 150ms",
+            }}
+          >
             {paginatedData.map((item) => (
               <div key={item.id} className="col">
                 <ResourceItem data={item} />
@@ -47,7 +74,7 @@ const ResourcesManager: React.FC = () => {
           </div>
 
           <Pagination
-            currentPage={currentPage}
+            currentPage={page}
             itemsPerPage={ITEMS_PER_PAGE}
             totalItems={data.length}
             onPageChange={(page) => setCurrentPage(page)}
