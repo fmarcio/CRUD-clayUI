@@ -169,8 +169,11 @@ export const useRequest = () => {
             break;
           }
         }
-      } catch (error: any) {
-        dispatch({ type: "FETCH_ERROR", payload: error });
+      } catch (error: unknown) {
+        const requestError =
+          error instanceof Error ? error : new Error(String(error));
+
+        dispatch({ type: "FETCH_ERROR", payload: requestError });
 
         console.error("Request failed:", error);
       }
