@@ -61,14 +61,17 @@ const Comment: React.FC<ICommentProps> = ({ item }) => {
             modalText="Are you sure you want to delete this comment?"
             modalTitle="Delete Comment"
             onClose={() => setIsModalOpen(false)}
-            onConfirm={async () => {
-              await sendRequest({
+            onConfirm={() => {
+              /* Close the modal before sending the request: the card unmounts
+              while the request is loading and once the item is removed, so
+              updating its state afterwards would target an unmounted component */
+              setIsModalOpen(false);
+
+              sendRequest({
                 id,
                 method: HTTPMethods.DELETE,
                 resourceName: "comments",
               });
-
-              setIsModalOpen(false);
             }}
           />
         )}

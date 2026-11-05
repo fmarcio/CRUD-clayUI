@@ -69,14 +69,17 @@ const Todo: React.FC<ITodoProps> = ({ item }) => {
             modalText="Are you sure you want to delete this todo?"
             modalTitle="Delete Todo"
             onClose={() => setIsModalOpen(false)}
-            onConfirm={async () => {
-              await sendRequest({
+            onConfirm={() => {
+              /* Close the modal before sending the request: the card unmounts
+              while the request is loading and once the item is removed, so
+              updating its state afterwards would target an unmounted component */
+              setIsModalOpen(false);
+
+              sendRequest({
                 id,
                 method: HTTPMethods.DELETE,
                 resourceName: "todos",
               });
-
-              setIsModalOpen(false);
             }}
           />
         )}
