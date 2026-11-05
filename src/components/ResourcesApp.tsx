@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { Provider } from "@clayui/core";
 import "@clayui/css/lib/css/atlas.css";
+// Vite resolves this to a base-aware URL in dev and production builds
+import spritemap from "@clayui/css/lib/images/icons/icons.svg";
 import ResourceItem from "./ResourceItem";
 import LoadingIndicator from "@clayui/loading-indicator";
 import ResourcesDropdown from "./ResourcesDropdown";
@@ -73,7 +75,7 @@ const ResourcesManager: React.FC = () => {
 
 export default function ResourcesApp() {
   return (
-    <Provider spritemap="/icons.svg">
+    <Provider spritemap={spritemap}>
       <ResourcesManager />
     </Provider>
   );
