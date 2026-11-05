@@ -10,6 +10,14 @@ The application is live and can be accessed here:
 
 ---
 
+## 🎬 Demo
+
+![Clay UI CRUD Manager demo](docs/ui-demo.gif)
+
+*Walkthrough recorded with Playwright: resource selection and filtering, pagination, input validation, and creating, editing, completing and deleting todos, posts and comments.*
+
+---
+
 ## 📖 Overview
 
 This project serves as a practical demonstration of integrating **Liferay's Clay UI** system within a React application. It manages various resources (Posts, Comments, Todos) fetched from the **[JSONPlaceholder API](https://jsonplaceholder.typicode.com/)**.
