@@ -12,6 +12,18 @@ import { useResourcesContext } from "../hooks/useResourcesContext";
 
 const ResourcesDropdown: React.FC = () => {
   const [alert, setAlert] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  /* Clay's DropDown.Search only filters while uncontrolled, so it is remounted
+  (fresh empty value) every time the menu closes to reset the filter */
+  const [searchKey, setSearchKey] = useState<number>(0);
+
+  const handleMenuActiveChange = (active: boolean) => {
+    setIsMenuOpen(active);
+
+    if (!active) {
+      setSearchKey((key) => key + 1);
+    }
+  };
 
   const { sendRequest, selectedResource, setSelectedResource } =
     useResourcesContext();
@@ -20,8 +32,10 @@ const ResourcesDropdown: React.FC = () => {
     <div className="container-fluid">
       <div className="d-flex justify-content-center align-items-center p-4">
         <DropDown
+          active={isMenuOpen}
           className="mr-3"
           filterKey="name"
+          onActiveChange={handleMenuActiveChange}
           trigger={
             <Button displayType="primary">
               {selectedResource || "Select Resource"}
@@ -31,6 +45,7 @@ const ResourcesDropdown: React.FC = () => {
         >
           <DropDown.Search
             id="resource-search-input"
+            key={searchKey}
             placeholder="Type to filter"
           />
 
@@ -41,6 +56,7 @@ const ResourcesDropdown: React.FC = () => {
                   <DropDown.Item
                     key={id}
                     onClick={() => {
+                      handleMenuActiveChange(false);
                       setSelectedResource(selectedResource);
 
                       sendRequest({
