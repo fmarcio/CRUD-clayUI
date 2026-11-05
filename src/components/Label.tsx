@@ -1,9 +1,5 @@
 import React, { type CSSProperties } from "react";
-
-export enum LabelColors {
-  BLUE = "blue",
-  GRAY = "gray",
-}
+import { LabelColors } from "./labelColors";
 
 interface ILabelProps {
   labelText: string;

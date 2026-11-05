@@ -6,7 +6,8 @@ import { Heading } from "@clayui/core";
 import { type CommentResource } from "../../utils/utils";
 import { useResourcesContext } from "../../hooks/useResourcesContext";
 import EditItem from "../EditItem";
-import Label, { LabelColors } from "../Label";
+import Label from "../Label";
+import { LabelColors } from "../labelColors";
 import ItemModal from "../ItemModal";
 
 interface ICommentProps {
