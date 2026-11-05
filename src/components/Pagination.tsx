@@ -21,7 +21,7 @@ const Pagination: React.FC<IPaginationProps> = ({
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   return (
-    <div className="d-flex justify-content-center align-items-center p-4">
+    <div className="d-flex flex-wrap justify-content-center align-items-center p-4">
       <Button
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}

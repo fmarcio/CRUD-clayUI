@@ -30,10 +30,10 @@ const ResourcesDropdown: React.FC = () => {
 
   return (
     <div className="container-fluid">
-      <div className="d-flex justify-content-center align-items-center p-4">
+      <div className="d-flex flex-column flex-md-row flex-md-wrap justify-content-center align-items-stretch align-items-md-center p-4">
         <DropDown
           active={isMenuOpen}
-          className="mr-3"
+          className="mb-2 mb-md-0 mr-md-3"
           filterKey="name"
           onActiveChange={handleMenuActiveChange}
           trigger={

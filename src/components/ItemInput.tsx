@@ -54,7 +54,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
 
   return (
     <>
-      <Form.Group className="d-flex justify-content-center align-items-center mb-0 p-2">
+      <Form.Group className="d-flex flex-column flex-sm-row justify-content-center align-items-stretch align-items-sm-center mb-0 p-2">
         <ClayInput
           id="add-todo-input"
           placeholder="Add new title here..."
@@ -65,7 +65,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
 
         {(resourceName === "posts" || resourceName === "comments") && (
           <ClayInput
-            className="ml-2"
+            className="mt-2 mt-sm-0 ml-sm-2"
             id="add-item-body"
             placeholder="Insert body text..."
             type="text"
@@ -75,9 +75,9 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
         )}
       </Form.Group>
 
-      <Button.Group>
+      <Button.Group className="d-flex flex-nowrap justify-content-center py-2">
         <Button
-          className="mr-2"
+          className="mr-2 text-nowrap"
           onClick={async () => {
             if (!areInputsValid({ resourceName, itemBody, itemTitle })) {
               setAlert(true);
@@ -101,6 +101,7 @@ const ItemInput: React.FC<IAddTodoInputProps> = ({
             setData([]);
             setSelectedResource("");
           }}
+          className="text-nowrap"
           displayType="secondary"
         >
           {"Clear Data"}
