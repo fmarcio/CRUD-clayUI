@@ -4,7 +4,10 @@ import "@testing-library/jest-dom";
 import Todo from "../Todo";
 import { ResourcesContext } from "../../../context/ResourcesContext";
 import { type TodoResource } from "../../../utils/utils";
-import { HTTPMethods } from "../../../hooks/useRequest";
+import {
+  HTTPMethods,
+  type SendRequestOptions,
+} from "../../../hooks/useRequest";
 
 const mockSendRequest = jest.fn();
 
@@ -59,7 +62,7 @@ describe("Todo Component", () => {
       const [data, setData] = useState<TodoResource[]>([mockTodo]);
       const [loading, setLoading] = useState(false);
 
-      const sendRequest = jest.fn(async (options: any) => {
+      const sendRequest = jest.fn(async (options: SendRequestOptions) => {
         setLoading(true);
 
         await new Promise((r) => setTimeout(r, 200));

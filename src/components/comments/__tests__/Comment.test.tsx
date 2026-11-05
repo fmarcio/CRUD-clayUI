@@ -4,7 +4,10 @@ import "@testing-library/jest-dom";
 import Comment from "../Comment";
 import { ResourcesContext } from "../../../context/ResourcesContext";
 import { type CommentResource } from "../../../utils/utils";
-import { HTTPMethods } from "../../../hooks/useRequest";
+import {
+  HTTPMethods,
+  type SendRequestOptions,
+} from "../../../hooks/useRequest";
 
 const mockSendRequest = jest.fn();
 
@@ -59,12 +62,12 @@ describe("Comment Component", () => {
   });
 
   test("should be editable, update comment, and display new values", async () => {
-    const TestWrapper = ({}) => {
+    const TestWrapper = () => {
       const [data, setData] = useState<CommentResource[]>([mockComment]);
 
       const [loading, setLoading] = useState(false);
 
-      const sendRequest = jest.fn(async (options: any) => {
+      const sendRequest = jest.fn(async (options: SendRequestOptions) => {
         setLoading(true);
 
         await new Promise((r) => setTimeout(r, 10));

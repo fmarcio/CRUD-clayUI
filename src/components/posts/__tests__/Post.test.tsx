@@ -4,7 +4,10 @@ import "@testing-library/jest-dom";
 import Post from "../Post";
 import { ResourcesContext } from "../../../context/ResourcesContext";
 import { type PostResource } from "../../../utils/utils";
-import { HTTPMethods } from "../../../hooks/useRequest";
+import {
+  HTTPMethods,
+  type SendRequestOptions,
+} from "../../../hooks/useRequest";
 
 const mockSendRequest = jest.fn();
 
@@ -61,7 +64,7 @@ describe("Post Component", () => {
       const [data, setData] = useState<PostResource[]>([mockPost]);
       const [loading, setLoading] = useState(false);
 
-      const sendRequest = jest.fn(async (options: any) => {
+      const sendRequest = jest.fn(async (options: SendRequestOptions) => {
         setLoading(true);
 
         await new Promise((r) => setTimeout(r, 200));
